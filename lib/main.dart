@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:just_audio/just_audio.dart';
 import 'package:playbeatz/models/provider.dart';
+import 'package:playbeatz/models/songController.dart';
 import 'package:provider/provider.dart';
 
 void main() {
@@ -9,12 +11,19 @@ void main() {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (_) => SongProvider(),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+        create: (_) => SongProvider()),
+        ChangeNotifierProvider(
+        create: (_) => SongController(),
+),
+    ],
       child: MaterialApp(
         home: MusicApp(),
       ),
     );
+
   }
 }
 
@@ -25,6 +34,7 @@ class MusicApp extends StatefulWidget {
 }
 
 class _MusicAppState extends State<MusicApp> {
+  final player = AudioPlayer();
 
   getSongs() async{
     await Provider.of<SongProvider>(context, listen: false).getAllSongs();
@@ -41,10 +51,22 @@ class _MusicAppState extends State<MusicApp> {
       body:ListView.builder(
           itemCount: songs.length,
           itemBuilder: (context, index) {
-        return ListTile(
-          leading: Icon(Icons.more_vert),
-          title: Text(songs[index]['title']),
-          subtitle: Text(songs[index]['artist'])
+        return GestureDetector(
+          onTap:  () async{
+            await player.setFilePath('${songs[index]['path']}');
+            player.play();
+          },
+          onDoubleTap: () async{
+            await player.pause();
+          },
+            onLongPress: () {
+              player.stop();
+            },
+          child: ListTile(
+            leading: Icon(Icons.more_vert),
+            title: Text(songs[index]['title']),
+            subtitle: Text(songs[index]['artist'])
+          ),
         );
       }),
     );
