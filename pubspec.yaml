@@ -38,6 +38,7 @@ dependencies:
   audiotagger: ^1.1.0
   device_preview: ^0.4.7
   flutter_media_notification: ^1.2.6
+  collection:
 
 dev_dependencies:
   flutter_test:

@@ -66,21 +66,32 @@ class SongProvider extends ChangeNotifier {
     var info;
     var fileInfo;
     var date;
-  //  Image artwork;
+    var artwork;
     try {
-      info = await audioTagger.readTagsAsMap(path: file,);
+      info = await audioTagger.readTagsAsMap(
+        path: file,
+      );
       fileInfo = File(file);
       date = fileInfo.lastAccessedSync();
-     // artwork = audioTagger.readArtwork(path: file) as Image;
+      artwork = await audioTagger.readArtwork(path: file);
     } catch (e) {
       debugPrint(e.toString());
     }
-    return{
+    return {
       'path': file,
-      'title': info != null && info['title'] != '' ? info['title'] : file.split('/').last.split('.mp3').first,
-      'artist' : info != null && info['artist'] != '' ? info['artist'] : 'Unknown artist',
-      'recentlyAdded' : date ?? 00-00-00,
-    //  'artwork' : artwork ?? null,
+      'title': info != null && info['title'] != ''
+          ? info['title']
+          : file.split('/').last.split('.mp3').first,
+      'artist': info != null && info['artist'] != ''
+          ? info['artist']
+          : 'Unknown artist',
+      'recentlyAdded': date ?? 00 - 00 - 00,
+      'album':
+          info != null && info['album'] != '' ? info['album'] : 'Unknown Album',
+      'albumArtist': info != null && info['albumArtist'] != ''
+          ? info['albumArtist']
+          : 'Unknown Artist',
+      'artwork': artwork ?? null,
     };
   }
 }
