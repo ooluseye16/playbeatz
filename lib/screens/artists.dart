@@ -1,5 +1,6 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
+import 'package:playbeatz/screens/playlist.dart';
 
 class Artists extends StatefulWidget {
   final List songList;
@@ -41,21 +42,29 @@ class _ArtistsState extends State<Artists> {
                 ),
             itemCount: artistList.length,
             itemBuilder: (context, index) {
+              var data = artistList[index];
               return ListTile(
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => Playlist(
+                                songList: data.values,
+                              )));
+                },
                 leading: CircleAvatar(
                   radius: 20.0,
-                  backgroundImage:
-                      artistList[index].values[0]['artwork'] != null
-                          ? MemoryImage(
-                              artistList[index].values[0]['artwork'],
-                            )
-                          : null,
-                  child: artistList[index].values[0]['artwork'] != null
+                  backgroundImage: data.values[0]['artwork'] != null
+                      ? MemoryImage(
+                          data.values[0]['artwork'],
+                        )
+                      : null,
+                  child: data.values[0]['artwork'] != null
                       ? null
-                      : Text(artistList[index].values[0]['title'][0]),
+                      : Text(data.values[0]['title'][0]),
                 ),
-                title: Text(artistList[index].name),
-                subtitle: Text("${artistList[index].values.length} songs"),
+                title: Text(data.name),
+                subtitle: Text("${data.values.length} songs"),
               );
             }),
       ),

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:playbeatz/models/provider.dart';
 import 'package:playbeatz/models/songController.dart';
-import 'package:playbeatz/screens/allSongs.dart';
+import 'package:playbeatz/screens/home.dart';
 import 'package:provider/provider.dart';
 
 void main() {
@@ -19,9 +19,8 @@ class MyApp extends StatelessWidget {
         ),
       ],
       child: MaterialApp(
-        home: MusicApp(),
+        home: Home(),
       ),
     );
   }
 }
-

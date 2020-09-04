@@ -1,5 +1,6 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
+import 'package:playbeatz/screens/playlist.dart';
 
 class Albums extends StatefulWidget {
   final List songList;
@@ -34,8 +35,7 @@ class _AlbumsState extends State<Albums> {
     return SafeArea(
       child: Scaffold(
         body: ListView.separated(
-            separatorBuilder: (context, index) =>
-                Divider(
+            separatorBuilder: (context, index) => Divider(
                   thickness: 2.0,
                   indent: 20.0,
                   endIndent: 20.0,
@@ -43,6 +43,15 @@ class _AlbumsState extends State<Albums> {
             itemCount: albumList.length,
             itemBuilder: (context, index) {
               return ListTile(
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              Playlist(
+                                songList: albumList[index].values,
+                              )));
+                },
                 leading: CircleAvatar(
                   radius: 20.0,
                   backgroundImage: albumList[index].values[0]['artwork'] != null
@@ -63,11 +72,9 @@ class _AlbumsState extends State<Albums> {
   }
 }
 
-
 class Album {
   final String title;
   final List values;
 
   Album({this.title, this.values});
-
 }
