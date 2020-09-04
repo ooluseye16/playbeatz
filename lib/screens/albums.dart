@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
 import 'package:collection/collection.dart';
+import 'package:flutter/material.dart';
 
 class Albums extends StatefulWidget {
   final List songList;
@@ -11,14 +11,14 @@ class Albums extends StatefulWidget {
 }
 
 class _AlbumsState extends State<Albums> {
-  List<Widget> albumList = [];
+  List<Album> albumList = [];
 
   getAlbums() {
     var data = widget.songList;
     var newMap = groupBy(data, (obj) => obj['album']);
-    newMap.forEach((key, value) => albumList.add(ListTile(
-          title: Text(key),
-          subtitle: Text("${value.length} songs"),
+    newMap.forEach((key, value) => albumList.add(Album(
+          title: key,
+          values: value,
         )));
   }
 
@@ -30,12 +30,44 @@ class _AlbumsState extends State<Albums> {
 
   @override
   Widget build(BuildContext context) {
+    albumList.sort((a, b) => a.title.compareTo(b.title));
     return SafeArea(
       child: Scaffold(
-        body: ListView.builder(itemBuilder: (context, index) {
-          return albumList[index];
-        }),
+        body: ListView.separated(
+            separatorBuilder: (context, index) =>
+                Divider(
+                  thickness: 2.0,
+                  indent: 20.0,
+                  endIndent: 20.0,
+                ),
+            itemCount: albumList.length,
+            itemBuilder: (context, index) {
+              return ListTile(
+                leading: CircleAvatar(
+                  radius: 20.0,
+                  backgroundImage: albumList[index].values[0]['artwork'] != null
+                      ? MemoryImage(
+                    albumList[index].values[0]['artwork'],
+                  )
+                      : null,
+                  child: albumList[index].values[0]['artwork'] != null
+                      ? null
+                      : Text(albumList[index].values[0]['title'][0]),
+                ),
+                title: Text(albumList[index].title),
+                subtitle: Text("${albumList[index].values.length} songs"),
+              );
+            }),
       ),
     );
   }
+}
+
+
+class Album {
+  final String title;
+  final List values;
+
+  Album({this.title, this.values});
+
 }

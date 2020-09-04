@@ -6,6 +6,8 @@ import 'package:playbeatz/models/songController.dart';
 import 'package:playbeatz/screens/albums.dart';
 import 'package:provider/provider.dart';
 
+import 'artists.dart';
+
 class MusicApp extends StatefulWidget {
   @override
   _MusicAppState createState() => _MusicAppState();
@@ -38,7 +40,7 @@ class _MusicAppState extends State<MusicApp> {
                 await Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => Albums(
+                      builder: (context) => Artists(
                             songList: songs,
                           )),
                 );
@@ -63,24 +65,24 @@ class _MusicAppState extends State<MusicApp> {
                     radius: 20.0,
                     backgroundImage: songs[index]['artwork'] != null
                         ? MemoryImage(
-                            songs[index]['artwork'],
-                          )
+                      songs[index]['artwork'],
+                    )
                         : null,
                     child: songs[index]['artwork'] != null
                         ? null
                         : Text(songs[index]['title'][0]),
                   ),
-                  title: Text(songs[index]['title']),
-                  subtitle: Text(songs[index]['albumArtist']),
+                  title: Text(songs[index]['title'], maxLines: 1,),
+                  subtitle: Text(songs[index]['artist']),
                   trailing: CustomButton(
                     child:
-                        controller.nowPlaying['path'] == songs[index]['path'] &&
-                                isPlaying
-                            ? Icons.pause
-                            : Icons.play_arrow,
+                    controller.nowPlaying['path'] == songs[index]['path'] &&
+                        isPlaying
+                        ? Icons.pause
+                        : Icons.play_arrow,
                     diameter: 12,
                     isToggled:
-                        controller.nowPlaying['path'] == songs[index]['path'],
+                    controller.nowPlaying['path'] == songs[index]['path'],
                     onPressed: () async {
                       controller.allSongs = songs;
                       await controller.playlistControlOptions(songs[index]);
