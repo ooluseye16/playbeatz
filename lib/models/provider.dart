@@ -1,14 +1,13 @@
 import 'dart:io';
+
+import 'package:audiotagger/audiotagger.dart';
 import 'package:flutter/material.dart';
 import 'package:path/path.dart';
-import 'package:audiotagger/audiotagger.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 
-
 class SongProvider extends ChangeNotifier {
-
-  List allSongs =[];
+  List allSongs = [];
   List recentlyAdded = [];
 
   void recentActivity() {
@@ -24,12 +23,13 @@ class SongProvider extends ChangeNotifier {
     if (permissionStatus.isGranted && Platform.isAndroid) {
       List<Directory> deviceStorage = await getExternalStorageDirectories();
       List<Directory> pathToStorage = [];
-      for(var direction in deviceStorage) {
+      for (var direction in deviceStorage) {
         pathToStorage.add(Directory(direction.path.split("Android")[0]));
       }
       List<FileSystemEntity> allFolders = await getAllFolders(pathToStorage);
-      for (FileSystemEntity folder in allFolders){
-        if(FileSystemEntity.isFileSync(folder.path) && basename(folder.path).endsWith('mp3')) {
+      for (FileSystemEntity folder in allFolders) {
+        if (FileSystemEntity.isFileSync(folder.path) &&
+            basename(folder.path).endsWith('mp3')) {
           allSongs.add(await songInfo(folder.path));
           notifyListeners();
         } else if (FileSystemEntity.isDirectorySync(folder.path)) {
@@ -42,6 +42,7 @@ class SongProvider extends ChangeNotifier {
     }
     notifyListeners();
   }
+
   Future<List<FileSystemEntity>> getAllFolders(List paths) async {
     List<FileSystemEntity> allFolders = [];
     for (var dir in paths) {
@@ -52,10 +53,13 @@ class SongProvider extends ChangeNotifier {
 
   Future<void> getAllFiles(String path) async {
     for (FileSystemEntity file in Directory(path).listSync()) {
-      if (FileSystemEntity.isFileSync(file.path) && basename(file.path).endsWith('mp3')) {
+      if (FileSystemEntity.isFileSync(file.path) &&
+          basename(file.path).endsWith('mp3')) {
         allSongs.add(await songInfo(file.path));
         notifyListeners();
-      } else if (FileSystemEntity.isDirectorySync(file.path) && !basename(file.path).startsWith('.') && !file.path.contains('/Android')) {
+      } else if (FileSystemEntity.isDirectorySync(file.path) &&
+          !basename(file.path).startsWith('.') &&
+          !file.path.contains('/Android')) {
         getAllFiles(file.path);
       } else {}
     }
@@ -85,6 +89,8 @@ class SongProvider extends ChangeNotifier {
       'artist': info != null && info['artist'] != ''
           ? info['artist']
           : 'Unknown artist',
+      'genre':
+          info != null && info['genre'] != '' ? info['genre'] : 'Unknown Genre',
       'recentlyAdded': date ?? 00 - 00 - 00,
       'album':
           info != null && info['album'] != '' ? info['album'] : 'Unknown Album',
@@ -95,4 +101,3 @@ class SongProvider extends ChangeNotifier {
     };
   }
 }
-

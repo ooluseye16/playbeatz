@@ -70,12 +70,6 @@ class _CustomButtonState extends State<CustomButton>
                     offset: Offset(2, 2),
                     blurRadius: 10,
                   ),
-                  // BoxShadow(
-                  //   color: Theme.of(context).backgroundColor,
-                  //   offset: Offset(-6, -6),
-                  //   blurRadius: 10,
-                  //   spreadRadius: 1.0,
-                  // ),
                 ],
               ),
             ),

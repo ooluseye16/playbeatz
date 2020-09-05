@@ -2,22 +2,22 @@ import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:playbeatz/screens/playlist.dart';
 
-class Artists extends StatefulWidget {
+class Genres extends StatefulWidget {
   final List songList;
 
-  const Artists({Key key, this.songList}) : super(key: key);
+  const Genres({Key key, this.songList}) : super(key: key);
 
   @override
-  _ArtistsState createState() => _ArtistsState();
+  _GenresState createState() => _GenresState();
 }
 
-class _ArtistsState extends State<Artists> {
-  List<Artist> artistList = [];
+class _GenresState extends State<Genres> {
+  List<Genre> genreList = [];
 
-  getArtists() {
+  getGenres() {
     var data = widget.songList;
-    var newMap = groupBy(data, (obj) => obj['artist']);
-    newMap.forEach((key, value) => artistList.add(Artist(
+    var newMap = groupBy(data, (obj) => obj['genre']);
+    newMap.forEach((key, value) => genreList.add(Genre(
           name: key,
           values: value,
         )));
@@ -26,18 +26,23 @@ class _ArtistsState extends State<Artists> {
   @override
   void initState() {
     super.initState();
-    getArtists();
+    getGenres();
   }
 
   @override
   Widget build(BuildContext context) {
-    artistList.sort((a, b) => a.name.compareTo(b.name));
+    genreList.sort((a, b) => a.name.compareTo(b.name));
     return SafeArea(
       child: Scaffold(
-        body: ListView.builder(
-            itemCount: artistList.length,
+        body: ListView.separated(
+            separatorBuilder: (context, index) => Divider(
+                  thickness: 2.0,
+                  indent: 20.0,
+                  endIndent: 20.0,
+                ),
+            itemCount: genreList.length,
             itemBuilder: (context, index) {
-              var data = artistList[index];
+              var data = genreList[index];
               return ListTile(
                 onTap: () {
                   Navigator.push(
@@ -51,8 +56,8 @@ class _ArtistsState extends State<Artists> {
                   radius: 20.0,
                   backgroundImage: data.values[0]['artwork'] != null
                       ? MemoryImage(
-                    data.values[0]['artwork'],
-                  )
+                          data.values[0]['artwork'],
+                        )
                       : null,
                   child: data.values[0]['artwork'] != null
                       ? null
@@ -60,11 +65,6 @@ class _ArtistsState extends State<Artists> {
                 ),
                 title: Text(data.name),
                 subtitle: Text("${data.values.length} songs"),
-                trailing: IconButton(
-                  icon: Icon(Icons.more_vert,
-                    color: Color(0xff254bc8).withOpacity(0.7),),
-                  onPressed: () {},
-                ),
               );
             }),
       ),
@@ -72,9 +72,9 @@ class _ArtistsState extends State<Artists> {
   }
 }
 
-class Artist {
+class Genre {
   final String name;
   final List values;
 
-  Artist({this.name, this.values});
+  Genre({this.name, this.values});
 }

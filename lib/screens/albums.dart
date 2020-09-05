@@ -1,5 +1,6 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
+import 'package:playbeatz/constants.dart';
 import 'package:playbeatz/screens/playlist.dart';
 
 class Albums extends StatefulWidget {
@@ -34,12 +35,7 @@ class _AlbumsState extends State<Albums> {
     albumList.sort((a, b) => a.title.compareTo(b.title));
     return SafeArea(
       child: Scaffold(
-        body: ListView.separated(
-            separatorBuilder: (context, index) => Divider(
-                  thickness: 2.0,
-                  indent: 20.0,
-                  endIndent: 20.0,
-                ),
+        body: ListView.builder(
             itemCount: albumList.length,
             itemBuilder: (context, index) {
               return ListTile(
@@ -47,8 +43,7 @@ class _AlbumsState extends State<Albums> {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) =>
-                              Playlist(
+                          builder: (context) => Playlist(
                                 songList: albumList[index].values,
                               )));
                 },
@@ -64,7 +59,13 @@ class _AlbumsState extends State<Albums> {
                       : Text(albumList[index].values[0]['title'][0]),
                 ),
                 title: Text(albumList[index].title),
-                subtitle: Text("${albumList[index].values.length} songs"),
+                subtitle: Text(
+                  "${albumList[index].values.length} songs", style: textStyle,),
+                trailing: IconButton(
+                  icon: Icon(Icons.more_vert,
+                    color: Color(0xff254bc8).withOpacity(0.7),),
+                  onPressed: () {},
+                ),
               );
             }),
       ),
