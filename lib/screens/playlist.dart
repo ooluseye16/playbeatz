@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:gradient_app_bar/gradient_app_bar.dart';
-import 'package:just_audio/just_audio.dart';
 import 'package:playbeatz/models/provider.dart';
 import 'package:playbeatz/models/songController.dart';
 import 'package:provider/provider.dart';
 
 import '../constants.dart';
+import 'nowPlaying.dart';
 
 class Playlist extends StatefulWidget {
   final List songList;
@@ -17,7 +17,6 @@ class Playlist extends StatefulWidget {
 }
 
 class _PlaylistState extends State<Playlist> {
-  final player = AudioPlayer();
   bool isPlaying = false;
   ScrollController _controller;
   dynamic currentSong;
@@ -129,14 +128,13 @@ class _PlaylistState extends State<Playlist> {
                     ? 'All songs'
                     : controller.playlistName;
                 if (currentSong != null) {
-                  // Navigator.push(
-                  //   context,
-                  //   MaterialPageRoute(
-                  //       builder: (_) => NowPlaying(
-                  //         currentSong: currentSong,
-                  //         isPlaying: isPlaying,
-                  //       )),
-                  // );
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (_) => NowPlaying(
+                              currentSong: currentSong,
+                            )),
+                  );
                 }
               },
               child: Container(
