@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:playbeatz/models/provider.dart';
 import 'package:playbeatz/models/songController.dart';
@@ -50,28 +51,31 @@ class _NowPlayingState extends State<NowPlaying> {
               leading: IconButton(
                 icon: Icon(
                   Icons.keyboard_arrow_down,
-                  color: Colors.black,
+                  color: Color(0xff254bc8).withOpacity(0.7),
                 ),
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.pop(context);
+                },
               ),
               title: Column(
                 children: [
                   Text(
                     "Playlist",
                     style: TextStyle(
-                      fontSize: 15.0,
+                      fontSize: 12.0,
                       color: Colors.grey,
                     ),
                   ),
                   Text(
                     controller.nowPlaying['album'],
-                    style: TextStyle(fontSize: 20.0, color: Colors.black),
+                    style: TextStyle(fontSize: 14.0, color: Colors.black),
                   ),
                 ],
               ),
               actions: [
                 IconButton(
-                  icon: Icon(Icons.more_vert, color: Colors.black),
+                  icon: Icon(Icons.more_vert,
+                      color: Color(0xff254bc8).withOpacity(0.7)),
                   onPressed: () {},
                 ),
               ],
@@ -89,28 +93,33 @@ class _NowPlayingState extends State<NowPlaying> {
                           left: 38, right: 37, top: 10.0, bottom: 10.0),
                       child: controller.nowPlaying['artwork'] != null
                           ? Image.memory(
-                              controller.nowPlaying['artwork'],
-                              fit: BoxFit.fill,
-                            )
+                        controller.nowPlaying['artwork'],
+                        fit: BoxFit.fill,
+                      )
                           : Text("No Artwork"),
                     ),
                   ),
                   Expanded(
                     flex: 1,
                     child: Container(
+                      padding: EdgeInsets.symmetric(horizontal: 10.0),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Text(
-                            controller.nowPlaying['title'],
-                            style: TextStyle(
-                              fontSize: 20.0,
+                          FittedBox(
+                            child: Text(
+                              controller.nowPlaying['title'],
+                              //overflow: TextOverflow.ellipsis,
+                              // maxLines: 1,
+                              style: TextStyle(
+                                fontSize: 16.0,
+                              ),
                             ),
                           ),
                           Text(
                             controller.nowPlaying['artist'],
                             style: TextStyle(
-                              fontSize: 15.0,
+                              fontSize: 14.0,
                               color: Colors.grey,
                             ),
                           ),
@@ -204,16 +213,16 @@ class _NowPlayingState extends State<NowPlaying> {
                             ),
                             child: Center(
                                 child: Icon(
-                              isPlaying ? Icons.pause : Icons.play_arrow,
-                              color: Colors.white,
-                              size: 25.0,
-                            )),
+                                  isPlaying ? Icons.pause : Icons.play_arrow,
+                                  color: Colors.white,
+                                  size: 25.0,
+                                )),
                           ),
                           onTap: () {
                             if (controller.nowPlaying['path'] == null) {
                               controller.allSongs = Provider.of<SongProvider>(
-                                      context,
-                                      listen: false)
+                                  context,
+                                  listen: false)
                                   .allSongs;
                               controller.setUp(currentSong);
                             } else {

@@ -71,6 +71,7 @@ class SongProvider extends ChangeNotifier {
     var fileInfo;
     var date;
     var artwork;
+    int numberofPlayed;
     try {
       info = await audioTagger.readTagsAsMap(
         path: file,
@@ -78,6 +79,7 @@ class SongProvider extends ChangeNotifier {
       fileInfo = File(file);
       date = fileInfo.lastAccessedSync();
       artwork = await audioTagger.readArtwork(path: file);
+      numberofPlayed = 0;
     } catch (e) {
       debugPrint(e.toString());
     }
@@ -90,14 +92,15 @@ class SongProvider extends ChangeNotifier {
           ? info['artist']
           : 'Unknown artist',
       'genre':
-          info != null && info['genre'] != '' ? info['genre'] : 'Unknown Genre',
+      info != null && info['genre'] != '' ? info['genre'] : 'Unknown Genre',
       'recentlyAdded': date ?? 00 - 00 - 00,
       'album':
-          info != null && info['album'] != '' ? info['album'] : 'Unknown Album',
+      info != null && info['album'] != '' ? info['album'] : 'Unknown Album',
       'albumArtist': info != null && info['albumArtist'] != ''
           ? info['albumArtist']
           : 'Unknown Artist',
       'artwork': artwork ?? null,
+      'numofPlay': numberofPlayed,
     };
   }
 }

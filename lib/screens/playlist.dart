@@ -52,6 +52,7 @@ class _PlaylistState extends State<Playlist> {
                 builder: (context, controller, child) {
                   return ListTile(
                     onTap: () async {
+                      songs[index]['numofPlay']++;
                       controller.allSongs = songs;
                       await controller.playlistControlOptions(songs[index]);
                       setState(() {
@@ -93,7 +94,10 @@ class _PlaylistState extends State<Playlist> {
                     ),
                     trailing: IconButton(
                       icon: Icon(
-                        Icons.more_vert,
+                        controller.nowPlaying['path'] ==
+                            songs[index]['path'] &&
+                            controller.isPlaying
+                            ? Icons.equalizer : Icons.more_vert,
                         color: Color(0xff254bc8).withOpacity(0.7),
                       ),
                       onPressed: () {},
