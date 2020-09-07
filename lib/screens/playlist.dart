@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gradient_app_bar/gradient_app_bar.dart';
+import 'package:playbeatz/components/playingButton.dart';
 import 'package:playbeatz/models/provider.dart';
 import 'package:playbeatz/models/songController.dart';
 import 'package:provider/provider.dart';
@@ -218,25 +219,3 @@ class _PlaylistState extends State<Playlist> {
   }
 }
 
-class PlayingButton extends StatelessWidget {
-  final IconData icon;
-  final Function onPressed;
-
-  const PlayingButton({
-    Key key,
-    this.icon,
-    this.onPressed,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return IconButton(
-      icon: Icon(
-        icon,
-        color: Colors.grey,
-      ),
-      iconSize: 30.0,
-      onPressed: onPressed,
-    );
-  }
-}

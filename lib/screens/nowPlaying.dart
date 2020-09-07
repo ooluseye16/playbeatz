@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:playbeatz/components/playingButton.dart';
 import 'package:playbeatz/models/provider.dart';
 import 'package:playbeatz/models/songController.dart';
-import 'package:playbeatz/screens/playlist.dart';
 import 'package:provider/provider.dart';
 
 class NowPlaying extends StatefulWidget {
@@ -176,6 +176,7 @@ class _NowPlayingState extends State<NowPlaying> {
                   currentSong = controller.nowPlaying['path'] == null
                       ? currentSong
                       : controller.nowPlaying;
+
                   return Container(
                     padding: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
                     color: Theme.of(context).scaffoldBackgroundColor,
@@ -185,7 +186,13 @@ class _NowPlayingState extends State<NowPlaying> {
                       children: <Widget>[
                         PlayingButton(
                           icon: Icons.shuffle,
-                          onPressed: () async {},
+                          color: controller.isShuffled
+                              ? Colors.black
+                              : Colors.grey,
+                          onPressed: () async {
+                            controller.settings(
+                                shuffle: !controller.isShuffled);
+                          },
                         ),
                         PlayingButton(
                           icon: Icons.skip_previous,

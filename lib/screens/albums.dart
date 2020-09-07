@@ -14,6 +14,7 @@ class Albums extends StatefulWidget {
 
 class _AlbumsState extends State<Albums> {
   List<Album> albumList = [];
+  ScrollController _controller;
 
   getAlbums() {
     var data = widget.songList;
@@ -28,6 +29,7 @@ class _AlbumsState extends State<Albums> {
   void initState() {
     super.initState();
     getAlbums();
+    _controller = ScrollController();
   }
 
   @override
@@ -35,39 +37,45 @@ class _AlbumsState extends State<Albums> {
     albumList.sort((a, b) => a.title.compareTo(b.title));
     return SafeArea(
       child: Scaffold(
-        body: ListView.builder(
-            itemCount: albumList.length,
-            itemBuilder: (context, index) {
-              return ListTile(
-                onTap: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => Playlist(
-                                songList: albumList[index].values,
-                              )));
-                },
-                leading: CircleAvatar(
-                  radius: 20.0,
-                  backgroundImage: albumList[index].values[0]['artwork'] != null
-                      ? MemoryImage(
-                    albumList[index].values[0]['artwork'],
-                  )
-                      : null,
-                  child: albumList[index].values[0]['artwork'] != null
-                      ? null
-                      : Text(albumList[index].values[0]['title'][0]),
-                ),
-                title: Text(albumList[index].title),
-                subtitle: Text(
-                  "${albumList[index].values.length} songs", style: textStyle,),
-                trailing: IconButton(
-                  icon: Icon(Icons.more_vert,
-                    color: Color(0xff254bc8).withOpacity(0.7),),
-                  onPressed: () {},
-                ),
-              );
-            }),
+        body: Scrollbar(
+          controller: _controller,
+          child: ListView.builder(
+              itemCount: albumList.length,
+              itemBuilder: (context, index) {
+                return ListTile(
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                Playlist(
+                                  songList: albumList[index].values,
+                                )));
+                  },
+                  leading: CircleAvatar(
+                    radius: 20.0,
+                    backgroundImage: albumList[index].values[0]['artwork'] !=
+                        null
+                        ? MemoryImage(
+                      albumList[index].values[0]['artwork'],
+                    )
+                        : null,
+                    child: albumList[index].values[0]['artwork'] != null
+                        ? null
+                        : Text(albumList[index].values[0]['title'][0]),
+                  ),
+                  title: Text(albumList[index].title),
+                  subtitle: Text(
+                    "${albumList[index].values.length} songs",
+                    style: textStyle,),
+                  trailing: IconButton(
+                    icon: Icon(Icons.more_vert,
+                      color: Color(0xff254bc8).withOpacity(0.7),),
+                    onPressed: () {},
+                  ),
+                );
+              }),
+        ),
       ),
     );
   }

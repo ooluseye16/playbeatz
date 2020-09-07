@@ -2,6 +2,8 @@ import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:playbeatz/screens/playlist.dart';
 
+import '../constants.dart';
+
 class Genres extends StatefulWidget {
   final List songList;
 
@@ -13,6 +15,7 @@ class Genres extends StatefulWidget {
 
 class _GenresState extends State<Genres> {
   List<Genre> genreList = [];
+  ScrollController _controller;
 
   getGenres() {
     var data = widget.songList;
@@ -27,6 +30,7 @@ class _GenresState extends State<Genres> {
   void initState() {
     super.initState();
     getGenres();
+    _controller = ScrollController();
   }
 
   @override
@@ -34,39 +38,45 @@ class _GenresState extends State<Genres> {
     genreList.sort((a, b) => a.name.compareTo(b.name));
     return SafeArea(
       child: Scaffold(
-        body: ListView.separated(
-            separatorBuilder: (context, index) => Divider(
-                  thickness: 2.0,
-                  indent: 20.0,
-                  endIndent: 20.0,
-                ),
-            itemCount: genreList.length,
-            itemBuilder: (context, index) {
-              var data = genreList[index];
-              return ListTile(
-                onTap: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => Playlist(
-                                songList: data.values,
-                              )));
-                },
-                leading: CircleAvatar(
-                  radius: 20.0,
-                  backgroundImage: data.values[0]['artwork'] != null
-                      ? MemoryImage(
-                          data.values[0]['artwork'],
-                        )
-                      : null,
-                  child: data.values[0]['artwork'] != null
-                      ? null
-                      : Text(data.values[0]['title'][0]),
-                ),
-                title: Text(data.name),
-                subtitle: Text("${data.values.length} songs"),
-              );
-            }),
+        body: Scrollbar(
+          controller: _controller,
+          child: ListView.builder(
+              itemCount: genreList.length,
+              itemBuilder: (context, index) {
+                return ListTile(
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                Playlist(
+                                  songList: genreList[index].values,
+                                )));
+                  },
+                  leading: CircleAvatar(
+                    radius: 20.0,
+                    backgroundImage: genreList[index].values[0]['artwork'] !=
+                        null
+                        ? MemoryImage(
+                      genreList[index].values[0]['artwork'],
+                    )
+                        : null,
+                    child: genreList[index].values[0]['artwork'] != null
+                        ? null
+                        : Text(genreList[index].values[0]['title'][0]),
+                  ),
+                  title: Text(genreList[index].name),
+                  subtitle: Text(
+                    "${genreList[index].values.length} songs",
+                    style: textStyle,),
+                  trailing: IconButton(
+                    icon: Icon(Icons.more_vert,
+                      color: Color(0xff254bc8).withOpacity(0.7),),
+                    onPressed: () {},
+                  ),
+                );
+              }),
+        ),
       ),
     );
   }
