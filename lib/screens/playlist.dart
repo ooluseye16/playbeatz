@@ -151,7 +151,11 @@ class _PlaylistState extends State<Playlist> {
                   children: <Widget>[
                     PlayingButton(
                       icon: Icons.shuffle,
-                      onPressed: () async {},
+                      color: controller.isShuffled ? Colors.black : Colors.grey,
+                      onPressed: () async {
+                        await controller.shuffle();
+                        controller.settings(shuffle: !controller.isShuffled);
+                      },
                     ),
                     PlayingButton(
                       icon: Icons.skip_previous,
@@ -206,8 +210,15 @@ class _PlaylistState extends State<Playlist> {
                     ),
                     PlayingButton(
                       icon: Icons.repeat,
-                      onPressed: () {},
-                    )
+                      color: controller.isRepeat
+                          ? Colors.black
+                          : Colors.grey,
+                      onPressed: () {
+                        controller.settings(
+                          repeat: !controller.isRepeat,
+                        );
+                      },
+                    ),
                   ],
                 ),
               ),

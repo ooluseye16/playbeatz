@@ -13,9 +13,9 @@ class SongController extends ChangeNotifier {
   String timeLeft = '';
   String timePlayed = '';
   String
-      playlistName; // this is assigned from library depending on the playlist that is opened
+  playlistName; // this is assigned from library depending on the playlist that is opened
   List
-      allSongs; // this is assigned from library depending on the playlist that is opened
+  allSongs; // this is assigned from library depending on the playlist that is opened
   static bool isFavourite = false;
   bool isShuffled = false;
   bool isRepeat = false;
@@ -23,6 +23,13 @@ class SongController extends ChangeNotifier {
   Map nowPlaying = {};
   bool isPlaying = false;
   int songLength = 0;
+  List shuffledSongs;
+
+
+  void shuffle() {
+    allSongs.shuffle();
+    shuffledSongs = allSongs;
+  }
 
   void init() {
     SharedPreferences.getInstance().then((pref) {
@@ -88,21 +95,23 @@ class SongController extends ChangeNotifier {
     }
   }
 
+
   Future<void> skip(
       {bool next = false, bool prev = false, BuildContext context}) async {
     currentSong =
         allSongs.indexWhere((element) => element['path'] == nowPlaying['path']);
-    List shuffled = [...allSongs];
+    //List shuffled = [...allSongs];
     await disposePlayer();
     try {
       if (isRepeat) {
         nowPlaying = nowPlaying;
       } else if (isShuffled) {
-        shuffled.shuffle();
-        currentSong = shuffled
+        //shuffled.shuffle();
+        currentSong = shuffledSongs
             .indexWhere((element) => element['path'] == nowPlaying['path']);
-        nowPlaying =
-            next ? shuffled[currentSong += 1] : shuffled[currentSong -= 1];
+        nowPlaying = next
+            ? shuffledSongs[currentSong += 1]
+            : shuffledSongs[currentSong -= 1];
       } else {
         nowPlaying =
             next ? allSongs[currentSong += 1] : allSongs[currentSong -= 1];
