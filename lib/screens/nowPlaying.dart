@@ -7,8 +7,9 @@ import 'package:provider/provider.dart';
 
 class NowPlaying extends StatefulWidget {
   final currentSong;
+  final songList;
 
-  NowPlaying({this.currentSong});
+  NowPlaying({this.currentSong, this.songList});
 
   @override
   _NowPlayingState createState() => _NowPlayingState();
@@ -39,6 +40,7 @@ class _NowPlayingState extends State<NowPlaying> {
 
   @override
   Widget build(BuildContext context) {
+    var songs = widget.songList;
     return Consumer<SongController>(
       builder: (context, controller, child) {
         return SafeArea(
@@ -190,7 +192,7 @@ class _NowPlayingState extends State<NowPlaying> {
                               ? Colors.black
                               : Colors.grey,
                           onPressed: () async {
-                            await controller.shuffle();
+                            await controller.shuffle(songs);
                             controller.settings(
                                 shuffle: !controller.isShuffled);
                           },
@@ -253,7 +255,7 @@ class _NowPlayingState extends State<NowPlaying> {
                         PlayingButton(
                           icon: Icons.repeat,
                           color:
-                              controller.isRepeat ? Colors.black : Colors.grey,
+                          controller.isRepeat ? Colors.black : Colors.grey,
                           onPressed: () {
                             controller.settings(
                               repeat: !controller.isRepeat,

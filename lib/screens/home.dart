@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:gradient_app_bar/gradient_app_bar.dart';
+import 'package:playbeatz/components/createPlaylist.dart';
 import 'package:playbeatz/components/customBottomNavBarItem.dart';
 import 'package:playbeatz/constants.dart';
 import 'package:playbeatz/models/provider.dart';
 import 'package:playbeatz/screens/albums.dart';
 import 'package:playbeatz/screens/allSongs.dart';
 import 'package:playbeatz/screens/genres.dart';
+import 'package:playbeatz/screens/playlistScreen.dart';
 import 'package:provider/provider.dart';
 
 import 'artists.dart';
@@ -49,9 +51,7 @@ class _HomeState extends State<Home> {
       Albums(
         songList: songs,
       ),
-      Artists(
-        songList: songs,
-      ),
+      PlaylistScreen(),
     ];
     return Scaffold(
       appBar: GradientAppBar(
@@ -176,23 +176,37 @@ class _HomeState extends State<Home> {
               });
             },
           ),
-          Container(
-            width: 40.0,
-            height: 40.0,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              gradient: LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  stops: [0.1, 0.9],
-                  colors: [
-                    Colors.blue,
-                    Color(0xff254bc8).withOpacity(0.7)
-                  ]
+          InkWell(
+            onTap: () {
+              showDialog(
+                context: context,
+                builder: (context) {
+                  return CreatePlayList(
+                    height: 35,
+                    width: 35,
+                    isCreateNew: false,
+                  );
+                },
+              );
+            },
+            child: Container(
+              width: 40.0,
+              height: 40.0,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                gradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    stops: [0.1, 0.9],
+                    colors: [Colors.blue, Color(0xff254bc8).withOpacity(0.7)]),
               ),
+              child: Center(
+                  child: Icon(
+                Icons.add,
+                color: Colors.white,
+                size: 25.0,
+              )),
             ),
-            child: Center(
-                child: Icon(Icons.add, color: Colors.white, size: 25.0,)),
           ),
           CustomNavBarItem(
             label: "Albums",

@@ -138,6 +138,7 @@ class _PlaylistState extends State<Playlist> {
                     MaterialPageRoute(
                         builder: (_) => NowPlaying(
                               currentSong: currentSong,
+                              songList: songs,
                             )),
                   );
                 }
@@ -153,8 +154,10 @@ class _PlaylistState extends State<Playlist> {
                       icon: Icons.shuffle,
                       color: controller.isShuffled ? Colors.black : Colors.grey,
                       onPressed: () async {
-                        await controller.shuffle();
-                        controller.settings(shuffle: !controller.isShuffled);
+                        if (!controller.isShuffled) {
+                          await controller.shuffle(songs);
+                          controller.settings(shuffle: !controller.isShuffled);
+                        }
                       },
                     ),
                     PlayingButton(

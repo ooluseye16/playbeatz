@@ -1,21 +1,25 @@
 import 'package:flutter/material.dart';
-import 'package:just_audio/just_audio.dart';
+import 'package:gradient_app_bar/gradient_app_bar.dart';
+import 'package:playbeatz/models/playlistDB.dart';
 import 'package:playbeatz/models/provider.dart';
 import 'package:playbeatz/models/songController.dart';
+import 'package:playbeatz/screens/playlistScreen.dart';
 import 'package:provider/provider.dart';
 
-import 'nowPlaying.dart';
+import '../constants.dart';
 
+class AddToPlaylist extends StatefulWidget {
+  final String playlistName;
 
-class MusicApp extends StatefulWidget {
+  AddToPlaylist({Key key, this.playlistName});
+
   @override
-  _MusicAppState createState() => _MusicAppState();
+  _AddToPlaylistState createState() => _AddToPlaylistState();
 }
 
-class _MusicAppState extends State<MusicApp> {
-  final player = AudioPlayer();
-  bool isPlaying = false;
-  dynamic currentSong;
+class _AddToPlaylistState extends State<AddToPlaylist> {
+  bool isChecked = false;
+  List playList = [];
   ScrollController _controller;
 
   @override
@@ -27,8 +31,35 @@ class _MusicAppState extends State<MusicApp> {
   @override
   Widget build(BuildContext context) {
     List songs = Provider.of<SongProvider>(context).allSongs;
-
     return Scaffold(
+      appBar: GradientAppBar(
+        leading: IconButton(
+          icon: Icon(Icons.keyboard_arrow_left),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+        title: Text(widget.playlistName),
+        centerTitle: true,
+        gradient: gradient,
+        automaticallyImplyLeading: false,
+        actions: [
+          Padding(
+            padding: EdgeInsets.all(20.0),
+            child: InkWell(
+              onTap: () {
+                Provider.of<PlayListDB>(context, listen: false)
+                    .createPlaylist(widget.playlistName, playList);
+                Navigator.pushReplacement(context,
+                    MaterialPageRoute(builder: (context) => PlaylistScreen()));
+              },
+              child: Text(
+                "DONE",
+              ),
+            ),
+          )
+        ],
+      ),
       body: Scrollbar(
         controller: _controller,
         child: ListView.builder(
@@ -36,9 +67,6 @@ class _MusicAppState extends State<MusicApp> {
             itemBuilder: (context, index) {
               return Consumer<SongController>(
                 builder: (context, controller, child) {
-                  currentSong = controller.nowPlaying['path'] == null
-                      ? currentSong
-                      : controller.nowPlaying;
                   return ListTile(
                     leading: CircleAvatar(
                       radius: 20.0,
@@ -54,6 +82,7 @@ class _MusicAppState extends State<MusicApp> {
                     title: Text(
                       songs[index]['title'],
                       maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                       style: TextStyle(
                         color: controller.nowPlaying['path'] ==
                                     songs[index]['path'] &&
@@ -74,29 +103,24 @@ class _MusicAppState extends State<MusicApp> {
                     ),
                     trailing: IconButton(
                       icon: Icon(
-                        controller.nowPlaying['path'] == songs[index]['path'] &&
-                                controller.isPlaying
-                            ? Icons.equalizer
-                            : Icons.more_vert,
+                        songs[index]['isAdded'] == true
+                            ? Icons.check_box
+                            : Icons.check_box_outline_blank,
                         color: Color(0xff254bc8).withOpacity(0.7),
                       ),
-                      onPressed: () {},
+                      onPressed: () {
+                        if (songs[index]['isAdded'] == true) {
+                          playList.remove(songs[index]);
+                          print(playList);
+                        } else {
+                          playList.add(songs[index]);
+                          print(playList);
+                        }
+                        setState(() {
+                          songs[index]['isAdded'] = !songs[index]['isAdded'];
+                        });
+                      },
                     ),
-                    onTap: () async {
-                      controller.allSongs = songs;
-                      await controller.playlistControlOptions(songs[index]);
-                      setState(() {
-                        isPlaying = controller.isPlaying;
-                      });
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (_) => NowPlaying(
-                                  currentSong: currentSong,
-                                  songList: songs,
-                                )),
-                      );
-                    },
                   );
                 },
               );
