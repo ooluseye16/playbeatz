@@ -54,20 +54,21 @@ class _MusicAppState extends State<MusicApp> {
                     title: Text(
                       songs[index]['title'],
                       maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                       style: TextStyle(
                         color: controller.nowPlaying['path'] ==
-                                    songs[index]['path'] &&
-                                controller.isPlaying
+                                songs[index]['path']
                             ? Colors.blue
                             : Colors.black,
                       ),
                     ),
                     subtitle: Text(
                       songs[index]['artist'],
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                       style: TextStyle(
                         color: controller.nowPlaying['path'] ==
-                                    songs[index]['path'] &&
-                                controller.isPlaying
+                            songs[index]['path']
                             ? Colors.blue
                             : Colors.black,
                       ),

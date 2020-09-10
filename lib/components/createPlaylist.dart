@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:playbeatz/constants.dart';
 import 'package:playbeatz/models/playlistDB.dart';
 import 'package:playbeatz/screens/addToPlaylist.dart';
 import 'package:provider/provider.dart';
@@ -36,18 +37,7 @@ class _CreatePlayListState extends State<CreatePlayList> {
 
   @override
   Widget build(BuildContext context) {
-    Orientation orientation = MediaQuery.of(context).orientation;
-    Size viewsSize = MediaQuery.of(context).size;
-    TextStyle textStyle = TextStyle(
-        fontSize: 15, fontWeight: FontWeight.w400, fontFamily: 'Acme');
-
     return Container(
-      height: orientation == Orientation.portrait
-          ? viewsSize.height
-          : viewsSize.width,
-      width: orientation == Orientation.portrait
-          ? viewsSize.width
-          : viewsSize.height,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
@@ -69,55 +59,46 @@ class _CreatePlayListState extends State<CreatePlayList> {
                     children: [
                       Text(
                         'New playlist',
-                        style: textStyle,
+                        style: textStyle.copyWith(fontSize: 15.0),
                       ),
-                      //     : Text(
-                      //   'Add to playlist',
-                      //   style: textStyle,
-                      // ),
+
                       Expanded(
                         child: Column(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              TextField(
-                                controller: inputField,
-                                keyboardType: TextInputType.name,
-                                decoration: InputDecoration(
-                                  labelText: 'Name',
-                                  labelStyle: textStyle,
+                              Container(
+                                height: 50.0,
+                                child: TextField(
+                                  controller: inputField,
+                                  keyboardType: TextInputType.name,
+                                  decoration: InputDecoration(
+                                    hintText: "Enter playlist name",
+                                    hintStyle: textStyle.copyWith(
+                                        fontSize: 12.0,
+                                        fontWeight: FontWeight.normal
+                                    ),
+                                    fillColor: Color(0xffD5D5D5).withOpacity(
+                                        0.25),
+                                    filled: true,
+                                    border: InputBorder.none,
+                                    enabledBorder: OutlineInputBorder(
+                                        borderSide: BorderSide.none,
+                                        borderRadius: BorderRadius.circular(
+                                            8.0)),
+                                    focusedBorder: OutlineInputBorder(
+                                        borderSide: BorderSide.none,
+                                        borderRadius: BorderRadius.circular(
+                                            8.0)),
+                                    // labelText: 'Name',
+                                    // labelStyle: textStyle,
+                                  ),
                                 ),
                               ),
                             ]),
                       ),
-                      //     : Expanded(
-                      //   child: ListView.builder(
-                      //     itemCount: playlistDB.playList.length,
-                      //     itemBuilder: (context, index) {
-                      //       return FlatButton(
-                      //         onPressed: () async {
-                      //           await playlistDB.addToPlaylist(
-                      //               playlistDB.playList[index]['name'],
-                      //               widget.song ??
-                      //                   Provider.of<SongController>(
-                      //                       context,
-                      //                       listen: false)
-                      //                       .nowPlaying);
-                      //           Navigator.pop(context);
-                      //         },
-                      //         child: index > 0 &&
-                      //             index < playlistDB.playList.length
-                      //             ? Text(
-                      //           playlistDB.playList[index]['name'],
-                      //           style: textStyle,
-                      //         )
-                      //             : SizedBox.shrink(),
-                      //       );
-                      //     },
-                      //   ),
-                      // ),
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           FlatButton(
                             onPressed: () {
@@ -148,18 +129,6 @@ class _CreatePlayListState extends State<CreatePlayList> {
                               style: textStyle,
                             ),
                           )
-                          //     : FlatButton(
-                          //   onPressed: () {
-                          //     setState(() {
-                          //       createNew = true;
-                          //     });
-                          //     print(createNew);
-                          //   },
-                          //   child: Text(
-                          //     'New playlist',
-                          //     style: textStyle,
-                          //   ),
-                          // ),
                         ],
                       ),
                     ],

@@ -21,6 +21,8 @@ class PlaylistScreen extends StatelessWidget {
                               MaterialPageRoute(
                                 builder: (context) => Playlist(
                                   songList: songs,
+                                  playlistName: database.playList[index]
+                                      ['name'],
                                 ),
                               ));
                         },

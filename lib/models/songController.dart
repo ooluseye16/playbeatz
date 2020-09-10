@@ -27,8 +27,8 @@ class SongController extends ChangeNotifier {
 
 
   void shuffle(List songList) {
-    songList.shuffle();
-    shuffledSongs = songList;
+    shuffledSongs = [...songList];
+    shuffledSongs.shuffle();
   }
 
   void init() {
@@ -103,7 +103,9 @@ class SongController extends ChangeNotifier {
     //List shuffled = [...allSongs];
     await disposePlayer();
     try {
-      if (isShuffled) {
+      if (isRepeat) {
+        nowPlaying = nowPlaying;
+      } else if (isShuffled) {
         //shuffled.shuffle();
         currentSong = shuffledSongs
             .indexWhere((element) => element['path'] == nowPlaying['path']);
@@ -112,15 +114,11 @@ class SongController extends ChangeNotifier {
             : shuffledSongs[currentSong -= 1];
       } else {
         nowPlaying =
-        next ? allSongs[currentSong += 1] : allSongs[currentSong -= 1];
+            next ? allSongs[currentSong += 1] : allSongs[currentSong -= 1];
       }
     } on RangeError catch (e) {
-      if (isRepeat) {
         nowPlaying = allSongs.first;
         debugPrint(e.toString());
-      } else {
-        stop();
-      }
     } finally {
       await setUp(nowPlaying);
       notifyListeners();

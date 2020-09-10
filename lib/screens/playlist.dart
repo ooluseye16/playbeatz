@@ -10,8 +10,9 @@ import 'nowPlaying.dart';
 
 class Playlist extends StatefulWidget {
   final List songList;
+  final String playlistName;
 
-  Playlist({this.songList});
+  Playlist({this.songList, this.playlistName});
 
   @override
   _PlaylistState createState() => _PlaylistState();
@@ -39,10 +40,20 @@ class _PlaylistState extends State<Playlist> {
             Navigator.pop(context);
           },
         ),
-        title: Text("Playlist"),
+        title: widget.playlistName == null
+            ? Text("Playlist")
+            : Text(widget.playlistName),
         centerTitle: true,
         gradient: gradient,
         automaticallyImplyLeading: false,
+        actions: [
+          IconButton(
+            icon: Icon(Icons.search),
+            onPressed: () {
+              //TODO: implement material searchBar
+            },
+          )
+        ],
       ),
       body: Scrollbar(
         controller: _controller,
@@ -77,28 +88,30 @@ class _PlaylistState extends State<Playlist> {
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
                         color: controller.nowPlaying['path'] ==
-                                    songs[index]['path'] &&
-                                controller.isPlaying
+                                songs[index]['path']
+                            //   && controller.isPlaying
                             ? Colors.blue
                             : Colors.black,
                       ),
                     ),
                     subtitle: Text(
                       songs[index]['artist'],
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                       style: TextStyle(
                         color: controller.nowPlaying['path'] ==
-                                    songs[index]['path'] &&
-                                controller.isPlaying
+                            songs[index]['path']
+                        // &&controller.isPlaying
                             ? Colors.blue
                             : Colors.black,
                       ),
                     ),
                     trailing: IconButton(
                       icon: Icon(
-                        controller.nowPlaying['path'] ==
-                            songs[index]['path'] &&
+                        controller.nowPlaying['path'] == songs[index]['path'] &&
                             controller.isPlaying
-                            ? Icons.equalizer : Icons.more_vert,
+                            ? Icons.equalizer
+                            : Icons.more_vert,
                         color: Color(0xff254bc8).withOpacity(0.7),
                       ),
                       onPressed: () {},
@@ -153,10 +166,14 @@ class _PlaylistState extends State<Playlist> {
                     PlayingButton(
                       icon: Icons.shuffle,
                       color: controller.isShuffled ? Colors.black : Colors.grey,
-                      onPressed: () async {
-                        if (!controller.isShuffled) {
-                          await controller.shuffle(songs);
+                      onPressed: () {
+                        if (controller.isShuffled) {
+                          // songs.sort((a, b) => a['title'].compareTo(b['title']));
                           controller.settings(shuffle: !controller.isShuffled);
+                        } else {
+                          controller.shuffle(songs);
+                          controller.settings(
+                              shuffle: !controller.isShuffled);
                         }
                       },
                     ),
@@ -213,9 +230,7 @@ class _PlaylistState extends State<Playlist> {
                     ),
                     PlayingButton(
                       icon: Icons.repeat,
-                      color: controller.isRepeat
-                          ? Colors.black
-                          : Colors.grey,
+                      color: controller.isRepeat ? Colors.black : Colors.grey,
                       onPressed: () {
                         controller.settings(
                           repeat: !controller.isRepeat,
@@ -232,4 +247,3 @@ class _PlaylistState extends State<Playlist> {
     );
   }
 }
-

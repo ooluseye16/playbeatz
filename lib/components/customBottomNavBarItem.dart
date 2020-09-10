@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 
 class CustomNavBarItem extends StatelessWidget {
-  final IconData icon;
+  final String svgImage;
   final Function onPressed;
   final Color color;
   final String label;
 
-  CustomNavBarItem({this.icon, this.onPressed, this.color, this.label});
+  CustomNavBarItem({this.svgImage, this.onPressed, this.color, this.label});
 
   @override
   Widget build(BuildContext context) {
@@ -17,12 +18,19 @@ class CustomNavBarItem extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Container(
-              height: 25.0,
-              child: Icon(
-                icon,
-                color: color,
-              ),
-            ),
+                height: 25.0,
+                child: svgImage != null
+                    ? SvgPicture.asset(
+                        svgImage,
+                        height: 30,
+                        width: 30,
+                        color: color,
+                      )
+                    : Icon(
+                        Icons.album,
+                        size: 27.0,
+                        color: color,
+                      )),
             Flexible(
                 child: Text(
               label,

@@ -159,7 +159,7 @@ class _HomeState extends State<Home> {
           CustomNavBarItem(
             label: "Home",
             color: selectedIndex != 0 ? Colors.grey : color,
-            icon: Icons.home,
+            svgImage: "images/home.svg",
             onPressed: () {
               setState(() {
                 selectedIndex = 0;
@@ -169,7 +169,7 @@ class _HomeState extends State<Home> {
           CustomNavBarItem(
             label: "Songs",
             color: selectedIndex != 1 ? Colors.grey : color,
-            icon: Icons.save_alt,
+            svgImage: 'images/songs.svg',
             onPressed: () {
               setState(() {
                 selectedIndex = 1;
@@ -211,7 +211,6 @@ class _HomeState extends State<Home> {
           CustomNavBarItem(
             label: "Albums",
             color: selectedIndex != 2 ? Colors.grey : color,
-            icon: Icons.filter,
             onPressed: () {
               setState(() {
                 selectedIndex = 2;
@@ -221,7 +220,7 @@ class _HomeState extends State<Home> {
           CustomNavBarItem(
             label: "Playlists",
             color: selectedIndex != 3 ? Colors.grey : color,
-            icon: Icons.account_circle,
+            svgImage: 'images/playlists.svg',
             onPressed: () {
               setState(() {
                 selectedIndex = 3;

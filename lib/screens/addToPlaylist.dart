@@ -3,10 +3,10 @@ import 'package:gradient_app_bar/gradient_app_bar.dart';
 import 'package:playbeatz/models/playlistDB.dart';
 import 'package:playbeatz/models/provider.dart';
 import 'package:playbeatz/models/songController.dart';
-import 'package:playbeatz/screens/playlistScreen.dart';
 import 'package:provider/provider.dart';
 
 import '../constants.dart';
+import 'home.dart';
 
 class AddToPlaylist extends StatefulWidget {
   final String playlistName;
@@ -19,7 +19,7 @@ class AddToPlaylist extends StatefulWidget {
 
 class _AddToPlaylistState extends State<AddToPlaylist> {
   bool isChecked = false;
-  List playList = [];
+  List playlist = [];
   ScrollController _controller;
 
   @override
@@ -49,9 +49,14 @@ class _AddToPlaylistState extends State<AddToPlaylist> {
             child: InkWell(
               onTap: () {
                 Provider.of<PlayListDB>(context, listen: false)
-                    .createPlaylist(widget.playlistName, playList);
-                Navigator.pushReplacement(context,
-                    MaterialPageRoute(builder: (context) => PlaylistScreen()));
+                    .createPlaylist(widget.playlistName, playlist);
+                Navigator.pushReplacement(
+                    context, MaterialPageRoute(builder: (context) => Home()));
+                for (var song in playlist) {
+                  setState(() {
+                    song['isAdded'] = false;
+                  });
+                }
               },
               child: Text(
                 "DONE",
@@ -93,10 +98,12 @@ class _AddToPlaylistState extends State<AddToPlaylist> {
                     ),
                     subtitle: Text(
                       songs[index]['artist'],
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                       style: TextStyle(
                         color: controller.nowPlaying['path'] ==
-                                    songs[index]['path'] &&
-                                controller.isPlaying
+                            songs[index]['path'] &&
+                            controller.isPlaying
                             ? Colors.blue
                             : Colors.black,
                       ),
@@ -110,11 +117,9 @@ class _AddToPlaylistState extends State<AddToPlaylist> {
                       ),
                       onPressed: () {
                         if (songs[index]['isAdded'] == true) {
-                          playList.remove(songs[index]);
-                          print(playList);
+                          playlist.remove(songs[index]);
                         } else {
-                          playList.add(songs[index]);
-                          print(playList);
+                          playlist.add(songs[index]);
                         }
                         setState(() {
                           songs[index]['isAdded'] = !songs[index]['isAdded'];

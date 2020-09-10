@@ -191,10 +191,15 @@ class _NowPlayingState extends State<NowPlaying> {
                           color: controller.isShuffled
                               ? Colors.black
                               : Colors.grey,
-                          onPressed: () async {
-                            await controller.shuffle(songs);
-                            controller.settings(
-                                shuffle: !controller.isShuffled);
+                          onPressed: () {
+                            if (controller.isShuffled) {
+                              controller.settings(
+                                  shuffle: !controller.isShuffled);
+                            } else {
+                              controller.shuffle(songs);
+                              controller.settings(
+                                  shuffle: !controller.isShuffled);
+                            }
                           },
                         ),
                         PlayingButton(
@@ -247,15 +252,14 @@ class _NowPlayingState extends State<NowPlaying> {
                         ),
                         PlayingButton(
                           icon: Icons.skip_next,
-
                           onPressed: () async {
                             await controller.skip(next: true);
                           },
                         ),
                         PlayingButton(
-                          icon: Icons.repeat,
+                          icon: Icons.repeat_one,
                           color:
-                          controller.isRepeat ? Colors.black : Colors.grey,
+                              controller.isRepeat ? Colors.black : Colors.grey,
                           onPressed: () {
                             controller.settings(
                               repeat: !controller.isRepeat,
