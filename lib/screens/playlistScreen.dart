@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:playbeatz/constants.dart';
 import 'package:playbeatz/models/playlistDB.dart';
 import 'package:playbeatz/screens/playlist.dart';
 import 'package:provider/provider.dart';
@@ -26,21 +27,23 @@ class PlaylistScreen extends StatelessWidget {
                                 ),
                               ));
                         },
-                        leading: CircleAvatar(
-                          radius: 20.0,
-                          backgroundImage: songs[0]['artwork'] != null
-                              ? MemoryImage(
-                                  songs[0]['artwork'],
-                                )
-                              : null,
-                          child: songs[0]['artwork'] != null
-                              ? null
-                              : Text(songs[0]['title'][0]),
-                        ),
-                        title: Text(database.playList[index]['name']),
+                        // leading: CircleAvatar(
+                        //   radius: 20.0,
+                        //   backgroundImage: songs[0]['artwork'] != null
+                        //       ? MemoryImage(
+                        //           songs[0]['artwork'],
+                        //         )
+                        //       : null,
+                        //   child: songs[0]['artwork'] != null
+                        //       ? null
+                        //       : Text(songs[0]['title'][0]),
+                        // ),
+                        title: Text(database.playList[index]['name'], style: TextStyle(
+                          fontWeight: FontWeight.w500,
+                        )),
                         subtitle: songs.length == null
-                            ? Text("Empty playlist")
-                            : Text("${songs.length} songs"),
+                            ? Text("Empty playlist", style: textStyle,)
+                            : Text("${songs.length} songs", style: textStyle,),
                         trailing: IconButton(
                           icon: Icon(
                             Icons.more_vert,

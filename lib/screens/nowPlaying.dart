@@ -1,9 +1,10 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:playbeatz/components/playingButton.dart';
+import 'package:playbeatz/models/playlistDB.dart';
 import 'package:playbeatz/models/provider.dart';
 import 'package:playbeatz/models/songController.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class NowPlaying extends StatefulWidget {
   final currentSong;
@@ -137,10 +138,23 @@ class _NowPlayingState extends State<NowPlaying> {
                         children: [
                           IconButton(
                             icon: Icon(
-                              Icons.favorite_border,
-                              color: Colors.grey,
+                              SongController.isFavourite
+                                  ? Icons.favorite
+                                  : Icons.favorite_border,
+                              color:  SongController.isFavourite
+                                  ? Colors.red: Colors.grey,
                             ),
-                            onPressed: () {},
+                            onPressed: () async {
+                              SongController.isFavourite
+                                  ? await Provider.of<PlayListDB>(context,
+                                  listen: false)
+                                  .removeFromPlaylist(
+                                  'Favourites', controller.nowPlaying)
+                                  : await Provider.of<PlayListDB>(context,
+                                  listen: false)
+                                  .addToPlaylist(
+                                  'Favourites', controller.nowPlaying);
+                            },
                           ),
                           Text(
                             "Lyrics",
@@ -192,14 +206,13 @@ class _NowPlayingState extends State<NowPlaying> {
                               ? Colors.black
                               : Colors.grey,
                           onPressed: () {
-                            if (controller.isShuffled) {
-                              controller.settings(
-                                  shuffle: !controller.isShuffled);
-                            } else {
                               controller.shuffle(songs);
                               controller.settings(
                                   shuffle: !controller.isShuffled);
-                            }
+                              SharedPreferences.getInstance().then((pref) {
+                                pref.setBool('shuffle', controller.isShuffled);
+                                pref.setBool('repeat', controller.isRepeat);
+                              });
                           },
                         ),
                         PlayingButton(
@@ -264,6 +277,10 @@ class _NowPlayingState extends State<NowPlaying> {
                             controller.settings(
                               repeat: !controller.isRepeat,
                             );
+                            SharedPreferences.getInstance().then((pref) {
+                              pref.setBool('shuffle', controller.isShuffled);
+                              pref.setBool('repeat', controller.isRepeat);
+                            });
                           },
                         )
                       ],

@@ -1,41 +1,49 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
+import 'package:gradient_app_bar/gradient_app_bar.dart';
+import 'package:playbeatz/models/provider.dart';
 import 'package:playbeatz/screens/playlist.dart';
+import 'package:provider/provider.dart';
 
-class Artists extends StatefulWidget {
-  final List songList;
+import '../constants.dart';
 
-  const Artists({Key key, this.songList}) : super(key: key);
+class Artists extends StatelessWidget {
 
-  @override
-  _ArtistsState createState() => _ArtistsState();
-}
-
-class _ArtistsState extends State<Artists> {
-  List<Artist> artistList = [];
-  ScrollController _controller;
-
-  getArtists() {
-    var data = widget.songList;
-    var newMap = groupBy(data, (obj) => obj['artist']);
-    newMap.forEach((key, value) => artistList.add(Artist(
-          name: key,
-          values: value,
-        )));
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    getArtists();
-    _controller = ScrollController();
-  }
+  final List<Artist> artistList = [];
+  final ScrollController _controller = ScrollController();
 
   @override
   Widget build(BuildContext context) {
+    var data = Provider.of<SongProvider>(context).allSongs;
+    var newMap = groupBy(data, (obj) => obj['artist']);
+    newMap.forEach((key, value) => artistList.add(Artist(
+      name: key,
+      values: value,
+    )));
     artistList.sort((a, b) => a.name.compareTo(b.name));
+
     return SafeArea(
       child: Scaffold(
+        appBar: GradientAppBar(
+          leading: IconButton(
+            icon: Icon(Icons.keyboard_arrow_left),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
+          title: Text("Artists"),
+          centerTitle: true,
+          gradient: gradient,
+          automaticallyImplyLeading: false,
+          actions: [
+            IconButton(
+              icon: Icon(Icons.search),
+              onPressed: () {
+                //TODO: implement material searchBar
+              },
+            )
+          ],
+        ),
         body: Scrollbar(
           controller: _controller,
           child: ListView.builder(
@@ -50,6 +58,7 @@ class _ArtistsState extends State<Artists> {
                             builder: (context) =>
                                 Playlist(
                                   songList: data.values,
+                                  playlistName: data.name,
                                 )));
                   },
                   leading: CircleAvatar(

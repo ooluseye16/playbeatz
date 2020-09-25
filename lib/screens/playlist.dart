@@ -4,6 +4,7 @@ import 'package:playbeatz/components/playingButton.dart';
 import 'package:playbeatz/models/provider.dart';
 import 'package:playbeatz/models/songController.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../constants.dart';
 import 'nowPlaying.dart';
@@ -64,12 +65,20 @@ class _PlaylistState extends State<Playlist> {
                 builder: (context, controller, child) {
                   return ListTile(
                     onTap: () async {
-                      songs[index]['numofPlay']++;
                       controller.allSongs = songs;
                       await controller.playlistControlOptions(songs[index]);
                       setState(() {
                         isPlaying = controller.isPlaying;
+                        songs[index]['numOfPlay']++;
                       });
+                      await Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (_) => NowPlaying(
+                              currentSong: currentSong,
+                              songList: songs,
+                            )),
+                      );
                     },
                     leading: CircleAvatar(
                       radius: 20.0,
@@ -87,9 +96,9 @@ class _PlaylistState extends State<Playlist> {
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
+                        fontWeight: FontWeight.w400,
                         color: controller.nowPlaying['path'] ==
-                                songs[index]['path']
-                            //   && controller.isPlaying
+                            songs[index]['path']
                             ? Colors.blue
                             : Colors.black,
                       ),
@@ -101,9 +110,8 @@ class _PlaylistState extends State<Playlist> {
                       style: TextStyle(
                         color: controller.nowPlaying['path'] ==
                             songs[index]['path']
-                        // &&controller.isPlaying
                             ? Colors.blue
-                            : Colors.black,
+                            : Colors.grey,
                       ),
                     ),
                     trailing: IconButton(
@@ -167,15 +175,14 @@ class _PlaylistState extends State<Playlist> {
                       icon: Icons.shuffle,
                       color: controller.isShuffled ? Colors.black : Colors.grey,
                       onPressed: () {
-                        if (controller.isShuffled) {
-                          // songs.sort((a, b) => a['title'].compareTo(b['title']));
-                          controller.settings(shuffle: !controller.isShuffled);
-                        } else {
                           controller.shuffle(songs);
                           controller.settings(
                               shuffle: !controller.isShuffled);
+                          SharedPreferences.getInstance().then((pref) {
+                            pref.setBool('shuffle', controller.isShuffled);
+                            pref.setBool('repeat', controller.isRepeat);
+                          });
                         }
-                      },
                     ),
                     PlayingButton(
                       icon: Icons.skip_previous,
@@ -235,6 +242,10 @@ class _PlaylistState extends State<Playlist> {
                         controller.settings(
                           repeat: !controller.isRepeat,
                         );
+                        SharedPreferences.getInstance().then((pref) {
+                          pref.setBool('shuffle', controller.isShuffled);
+                          pref.setBool('repeat', controller.isRepeat);
+                        });
                       },
                     ),
                   ],

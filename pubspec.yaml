@@ -62,7 +62,6 @@ flutter:
     - images/menu.png
     - images/songs.svg
     - images/home.svg
-    - images/cd.png
     - images/shuffle.svg
     - images/Previous.svg
     - images/playlists.svg

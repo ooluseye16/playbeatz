@@ -6,7 +6,7 @@ import 'package:playbeatz/models/songController.dart';
 import 'package:provider/provider.dart';
 
 import '../constants.dart';
-import 'home.dart';
+import 'playbeatz.dart';
 
 class AddToPlaylist extends StatefulWidget {
   final String playlistName;
@@ -51,7 +51,7 @@ class _AddToPlaylistState extends State<AddToPlaylist> {
                 Provider.of<PlayListDB>(context, listen: false)
                     .createPlaylist(widget.playlistName, playlist);
                 Navigator.pushReplacement(
-                    context, MaterialPageRoute(builder: (context) => Home()));
+                    context, MaterialPageRoute(builder: (context) => PlayBeatz()));
                 for (var song in playlist) {
                   setState(() {
                     song['isAdded'] = false;

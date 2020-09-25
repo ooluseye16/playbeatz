@@ -1,5 +1,5 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:just_audio/just_audio.dart';
 import 'package:playbeatz/models/provider.dart';
 import 'package:playbeatz/models/songController.dart';
 import 'package:provider/provider.dart';
@@ -7,13 +7,14 @@ import 'package:provider/provider.dart';
 import 'nowPlaying.dart';
 
 
-class MusicApp extends StatefulWidget {
+class AllSongs extends StatefulWidget {
+  final List songList;
+  AllSongs({this.songList});
   @override
-  _MusicAppState createState() => _MusicAppState();
+  _AllSongsState createState() => _AllSongsState();
 }
 
-class _MusicAppState extends State<MusicApp> {
-  final player = AudioPlayer();
+class _AllSongsState extends State<AllSongs> {
   bool isPlaying = false;
   dynamic currentSong;
   ScrollController _controller;
@@ -27,7 +28,7 @@ class _MusicAppState extends State<MusicApp> {
   @override
   Widget build(BuildContext context) {
     List songs = Provider.of<SongProvider>(context).allSongs;
-
+    songs.sort((a,b) => a['title'].compareTo(b['title']));
     return Scaffold(
       body: Scrollbar(
         controller: _controller,
@@ -56,6 +57,7 @@ class _MusicAppState extends State<MusicApp> {
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
+                        fontWeight: FontWeight.w400,
                         color: controller.nowPlaying['path'] ==
                                 songs[index]['path']
                             ? Colors.blue
@@ -70,7 +72,7 @@ class _MusicAppState extends State<MusicApp> {
                         color: controller.nowPlaying['path'] ==
                             songs[index]['path']
                             ? Colors.blue
-                            : Colors.black,
+                            : Colors.grey,
                       ),
                     ),
                     trailing: IconButton(
@@ -84,18 +86,20 @@ class _MusicAppState extends State<MusicApp> {
                       onPressed: () {},
                     ),
                     onTap: () async {
+
                       controller.allSongs = songs;
                       await controller.playlistControlOptions(songs[index]);
                       setState(() {
                         isPlaying = controller.isPlaying;
+                        songs[index]['numOfPlay']++;
                       });
-                      Navigator.push(
+                      await Navigator.push(
                         context,
                         MaterialPageRoute(
                             builder: (_) => NowPlaying(
-                                  currentSong: currentSong,
-                                  songList: songs,
-                                )),
+                              currentSong: currentSong,
+                              songList: songs,
+                            )),
                       );
                     },
                   );

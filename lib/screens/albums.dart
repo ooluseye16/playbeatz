@@ -1,40 +1,26 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:playbeatz/constants.dart';
+import 'package:playbeatz/models/provider.dart';
 import 'package:playbeatz/screens/playlist.dart';
+import 'package:provider/provider.dart';
 
-class Albums extends StatefulWidget {
-  final List songList;
+class Albums extends StatelessWidget {
 
-  Albums({this.songList});
+ final List<Album> albumList = [];
+  final ScrollController _controller = ScrollController();
 
-  @override
-  _AlbumsState createState() => _AlbumsState();
-}
-
-class _AlbumsState extends State<Albums> {
-  List<Album> albumList = [];
-  ScrollController _controller;
-
-  getAlbums() {
-    var data = widget.songList;
-    var newMap = groupBy(data, (obj) => obj['album']);
-    newMap.forEach((key, value) => albumList.add(Album(
-          title: key,
-          values: value,
-        )));
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    getAlbums();
-    _controller = ScrollController();
-  }
 
   @override
   Widget build(BuildContext context) {
+    var data = Provider.of<SongProvider>(context).allSongs;
+    var newMap = groupBy(data, (obj) => obj['album']);
+    newMap.forEach((key, value) => albumList.add(Album(
+      title: key,
+      values: value,
+    )));
     albumList.sort((a, b) => a.title.compareTo(b.title));
+
     return SafeArea(
       child: Scaffold(
         body: Scrollbar(
@@ -50,6 +36,7 @@ class _AlbumsState extends State<Albums> {
                             builder: (context) =>
                                 Playlist(
                                   songList: albumList[index].values,
+                                  playlistName: albumList[index].title,
                                 )));
                   },
                   leading: CircleAvatar(

@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'playlistDB.dart';
 
 class SongController extends ChangeNotifier {
   SongController() {
@@ -24,7 +25,7 @@ class SongController extends ChangeNotifier {
   bool isPlaying = false;
   int songLength = 0;
   List shuffledSongs;
-
+  PlayListDB playListDB = PlayListDB();
 
   void shuffle(List songList) {
     shuffledSongs = [...songList];
@@ -52,8 +53,8 @@ class SongController extends ChangeNotifier {
 
   Future<void> setUp(dynamic song) async {
     nowPlaying = song;
-    // isFavourite = await playListDB.isFavourite(nowPlaying);
-    // playListDB.saveNowPlaying(nowPlaying);
+     isFavourite = await playListDB.isFavourite(nowPlaying);
+    playListDB.saveNowPlaying(nowPlaying);
     currentSong =
         allSongs.indexWhere((element) => element['path'] == nowPlaying['path']);
     player = AudioPlayer();
@@ -121,6 +122,7 @@ class SongController extends ChangeNotifier {
         debugPrint(e.toString());
     } finally {
       await setUp(nowPlaying);
+      nowPlaying['numOfPlay']++;
       notifyListeners();
     }
   }

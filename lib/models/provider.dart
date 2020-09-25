@@ -5,10 +5,26 @@ import 'package:flutter/material.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:playbeatz/utilities/dark_mode_preferences.dart';
 
 class SongProvider extends ChangeNotifier {
   List allSongs = [];
   List recentlyAdded = [];
+
+  DarkThemePreferences darkThemePreferences = DarkThemePreferences();
+  bool _darkTheme = false;
+
+  bool get darkTheme => _darkTheme;
+
+  set darkTheme(bool value) {
+    _darkTheme = value;
+    darkThemePreferences.setDarkTheme(value);
+    notifyListeners();
+  }
+  void init() async {
+    await getAllSongs();
+    recentActivity();
+  }
 
   void recentActivity() {
     List newList = allSongs;
@@ -71,7 +87,7 @@ class SongProvider extends ChangeNotifier {
     var fileInfo;
     var date;
     var artwork;
-    int numberofPlayed;
+    int numberOfPlayed;
     bool isAdded;
     try {
       info = await audioTagger.readTagsAsMap(
@@ -80,7 +96,7 @@ class SongProvider extends ChangeNotifier {
       fileInfo = File(file);
       date = fileInfo.lastAccessedSync();
       artwork = await audioTagger.readArtwork(path: file);
-      numberofPlayed = 0;
+      numberOfPlayed = 0;
       isAdded = false;
     } catch (e) {
       debugPrint(e.toString());
@@ -94,15 +110,15 @@ class SongProvider extends ChangeNotifier {
           ? info['artist']
           : 'Unknown artist',
       'genre':
-          info != null && info['genre'] != '' ? info['genre'] : 'Unknown Genre',
+          info != null && info['genre'] != '' ? info['genre'] : '<unknown>',
       'recentlyAdded': date ?? 00 - 00 - 00,
       'album':
-          info != null && info['album'] != '' ? info['album'] : 'Unknown Album',
+          info != null && info['album'] != '' ? info['album'] : '<unknown>',
       'albumArtist': info != null && info['albumArtist'] != ''
           ? info['albumArtist']
-          : 'Unknown Artist',
+          : '<unknown>',
       'artwork': artwork ?? null,
-      'numofPlay': numberofPlayed,
+      'numOfPlay': numberOfPlayed,
       'isAdded': isAdded,
     };
   }

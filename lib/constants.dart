@@ -8,7 +8,7 @@ final gradient = LinearGradient(
       0.9
     ],
     colors: [
-      Color(0xffC36DD7).withOpacity(0.2),
+      Color(0xffC36DD7).withOpacity(0.8),
       Color(0xff254bc8).withOpacity(0.7)
     ]);
 final Shader linearGradient =

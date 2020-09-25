@@ -1,43 +1,50 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
+import 'package:gradient_app_bar/gradient_app_bar.dart';
+import 'package:playbeatz/models/provider.dart';
 import 'package:playbeatz/screens/playlist.dart';
+import 'package:provider/provider.dart';
 
 import '../constants.dart';
 
-class Genres extends StatefulWidget {
-  final List songList;
+class Genres extends StatelessWidget {
 
-  const Genres({Key key, this.songList}) : super(key: key);
+ final List<Genre> genreList = [];
+  final ScrollController _controller = ScrollController();
 
-  @override
-  _GenresState createState() => _GenresState();
-}
-
-class _GenresState extends State<Genres> {
-  List<Genre> genreList = [];
-  ScrollController _controller;
-
-  getGenres() {
-    var data = widget.songList;
-    var newMap = groupBy(data, (obj) => obj['genre']);
-    newMap.forEach((key, value) => genreList.add(Genre(
-          name: key,
-          values: value,
-        )));
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    getGenres();
-    _controller = ScrollController();
-  }
 
   @override
   Widget build(BuildContext context) {
+    var data =Provider.of<SongProvider>(context).allSongs;
+    var newMap = groupBy(data, (obj) => obj['genre']);
+    newMap.forEach((key, value) => genreList.add(Genre(
+      name: key,
+      values: value,
+    )));
     genreList.sort((a, b) => a.name.compareTo(b.name));
     return SafeArea(
       child: Scaffold(
+        appBar: GradientAppBar(
+          leading: IconButton(
+            icon: Icon(Icons.keyboard_arrow_left),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
+          title:Text("Genres"),
+
+          centerTitle: true,
+          gradient: gradient,
+          automaticallyImplyLeading: false,
+          actions: [
+            IconButton(
+              icon: Icon(Icons.search),
+              onPressed: () {
+                //TODO: implement material searchBar
+              },
+            )
+          ],
+        ),
         body: Scrollbar(
           controller: _controller,
           child: ListView.builder(
@@ -51,6 +58,7 @@ class _GenresState extends State<Genres> {
                             builder: (context) =>
                                 Playlist(
                                   songList: genreList[index].values,
+                                  playlistName: genreList[index].name,
                                 )));
                   },
                   leading: CircleAvatar(

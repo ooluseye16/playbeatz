@@ -14,7 +14,12 @@ class PlayListDB extends ChangeNotifier {
     refresh();
   }
 
-  List playList = [];
+  List playList = [
+    {
+      'name': 'Favourites',
+      'songs': [],
+    },
+  ];
 
   List recentList = [];
 
@@ -64,7 +69,7 @@ class PlayListDB extends ChangeNotifier {
       });
     }
     // songcontroller needs to handle the bool because for every song thats played the bool is re evaluated
-    // SongController.isFavourite = await isFavourite(song);
+     SongController.isFavourite = await isFavourite(song);
     refresh();
   }
 
